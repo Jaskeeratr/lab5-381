@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab5 - Exercise 1</title>
+</head>
+<body>
+    <input type="text" id="textInput" placeholder="Type something here..."/>
+    <label id="textLabel">[ENSF381 Course]</label>
+    <button id="redButton">Red</button>
+    <button id="blueButton">Blue</button>
+    <button id="greenButton">Green</button>
+    <button id="orangeButton">Orange</button>
+    <button id="purpleButton">Purple</button>
+
+    <script type="text/javascript">
+        // Get elements
+        const textInput = document.getElementById('textInput');
+        const textLabel = document.getElementById('textLabel');
+        const buttons = {
+            red: document.getElementById('redButton'),
+            blue: document.getElementById('blueButton'),
+            green: document.getElementById('greenButton'),
+            orange: document.getElementById('orangeButton'),
+            purple: document.getElementById('purpleButton')
+        };
+
+        // Handle Enter key in textbox
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                textLabel.textContent = textInput.value;
+                textInput.value = ''; // Clear input
+            }
+        });
+
+        // Handle button clicks
+        Object.entries(buttons).forEach(([color, button]) => {
+            button.addEventListener('click', () => {
+                textLabel.style.color = color;
+            });
+        });
+    </script>
+</body>
+</html>

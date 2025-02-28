@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab5 - Exercise 3</title>
+</head>
+<body>
+    <input type="text" id="textInput" placeholder="Enter user number (1-30)..."/>
+    <label id="textLabel">[ENSF381 Course]</label>
+    <button id="redButton">Red</button>
+    <button id="blueButton">Blue</button>
+    <button id="greenButton">Green</button>
+    <button id="orangeButton">Orange</button>
+    <button id="purpleButton">Purple</button>
+
+    <script type="text/javascript">
+        // Get elements
+        const textInput = document.getElementById('textInput');
+        const textLabel = document.getElementById('textLabel');
+        const buttons = {
+            red: document.getElementById('redButton'),
+            blue: document.getElementById('blueButton'),
+            green: document.getElementById('greenButton'),
+            orange: document.getElementById('orangeButton'),
+            purple: document.getElementById('purpleButton')
+        };
+
+        // Fetch users from MockAPI
+        async function retrieveData() {
+            const endpoint = './users_api'; // Replace with your URL
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Fetch error:', error);
+                throw error;
+            }
+        }
+
+        // Handle Enter key press
+        textInput.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const input = textInput.value.trim();
+                textInput.value = ''; // Clear input
+
+                // Validate input
+                const userId = parseInt(input, 10);
+                if (isNaN(userId) || userId < 1 || userId > 30) {
+                    textLabel.textContent = 'Error: Enter a valid number (1-30).';
+                    return;
+                }
+
+                try {
+                    const users = await retrieveData();
+                    console.log('API Response:', users); // For screenshot
+                    const user = users.find(u => u.id === userId.toString()); // Match ID as string
+                    if (user) {
+                        textLabel.textContent = `ID: ${user.id}, Name: ${user.first_name}, Group: ${user.user_group}`;
+                    } else {
+                        textLabel.textContent = 'No user found with this ID.';
+                    }
+                } catch (error) {
+                    textLabel.textContent = 'Failed to fetch data. Check console.';
+                }
+            }
+        });
+
+        // Handle button clicks for color
+        Object.entries(buttons).forEach(([color, button]) => {
+            button.addEventListener('click', () => {
+                textLabel.style.color = color;
+            });
+        });
+    </script>
+</body>
+</html>
